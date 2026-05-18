@@ -1,5 +1,5 @@
 # ============================================================
-# EXPLORATORY DATA ANALYSIS (EDA) & TREND ANALYSIS
+# EXPLORATORY DATA ANALYSIS (EDA) & TREND EXPLORATION
 # COVID-19 Substance Use & Healthcare Harm Analytics Project
 #
 # Description:
@@ -7,10 +7,14 @@
 # healthcare reporting data related to substance-related harms
 # during the COVID-19 pandemic.
 #
-# The goal is to understand trends in emergency department (ED)
-# visits, hospitalizations, opioid poisonings, and substance-
-# related healthcare burden before building the final dashboard
-# in Power BI.
+# The goal is to explore trends in emergency department (ED)
+# visits, hospitalizations, opioid poisonings, and healthcare
+# burden before building the final interactive dashboard in
+# Power BI.
+#
+# Python is used for data exploration, validation, trend analysis,
+# and preparing analysis-ready tables. Final interactive KPIs and
+# dashboard measures are developed in Power BI using DAX.
 #
 # Dataset Source:
 # Canadian Institute for Health Information (CIHI)
@@ -115,7 +119,7 @@ print("Hospitalization Opioids:", hosp_opioids.shape)
 
 
 # ================================
-# SECTION 3: BASIC DATA CLEANING
+# SECTION 3: BASIC DATA PREPARATION
 # ================================
 
 # Remove fully empty rows and columns
@@ -124,20 +128,31 @@ hosp_substances = hosp_substances.dropna(how="all").dropna(axis=1, how="all")
 ed_opioids = ed_opioids.dropna(how="all").dropna(axis=1, how="all")
 hosp_opioids = hosp_opioids.dropna(how="all").dropna(axis=1, how="all")
 
-# Rename common columns for easier analysis
-ed_substances.columns = ["Substance", "ED_2019", "ED_2020", "ED_Percentage_Change"]
-hosp_substances.columns = ["Substance", "Hosp_2019", "Hosp_2020", "Hosp_Percentage_Change"]
+# Rename substance summary columns for easier analysis
+ed_substances.columns = [
+    "Substance",
+    "ED_2019",
+    "ED_2020",
+    "ED_Percentage_Change"
+]
 
-# Remove rows where Substance is missing
+hosp_substances.columns = [
+    "Substance",
+    "Hosp_2019",
+    "Hosp_2020",
+    "Hosp_Percentage_Change"
+]
+
+# Remove rows where the main category is missing
 ed_substances = ed_substances.dropna(subset=["Substance"])
 hosp_substances = hosp_substances.dropna(subset=["Substance"])
 
 
 # ================================
-# SECTION 6: SUBSTANCE-LEVEL ANALYSIS
+# SECTION 4: SUBSTANCE-LEVEL ANALYSIS
 # ================================
 
-# Merge ED and hospitalization substance tables
+# Merge ED and hospitalization tables by substance type
 substance_summary = ed_substances.merge(
     hosp_substances,
     on="Substance",
@@ -147,32 +162,45 @@ substance_summary = ed_substances.merge(
 print("\nSubstance Summary:")
 print(substance_summary.head())
 
-# Sort by ED percentage change
+
+# Rank substances by ED visit percentage change
 ed_growth_rank = substance_summary.sort_values(
     by="ED_Percentage_Change",
     ascending=False
 )
 
 print("\nSubstances Ranked by ED Visit Growth:")
-print(ed_growth_rank[["Substance", "ED_2019", "ED_2020", "ED_Percentage_Change"]])
+print(
+    ed_growth_rank[
+        ["Substance", "ED_2019", "ED_2020", "ED_Percentage_Change"]
+    ]
+)
 
-# Sort by hospitalization percentage change
+
+# Rank substances by hospitalization percentage change
 hosp_growth_rank = substance_summary.sort_values(
     by="Hosp_Percentage_Change",
     ascending=False
 )
 
 print("\nSubstances Ranked by Hospitalization Growth:")
-print(hosp_growth_rank[["Substance", "Hosp_2019", "Hosp_2020", "Hosp_Percentage_Change"]])
+print(
+    hosp_growth_rank[
+        ["Substance", "Hosp_2019", "Hosp_2020", "Hosp_Percentage_Change"]
+    ]
+)
 
 
 # ================================
-# SECTION 4: ED VISITS VS HOSPITALIZATIONS
+# SECTION 5: ED VISITS VS HOSPITALIZATIONS
 # ================================
 
-# Compare ED and hospitalization percentage change by substance
+# Compare ED visit percentage change by substance
 plt.figure(figsize=(10, 6))
-plt.bar(substance_summary["Substance"], substance_summary["ED_Percentage_Change"])
+plt.bar(
+    substance_summary["Substance"],
+    substance_summary["ED_Percentage_Change"]
+)
 plt.title("Percentage Change in ED Visits by Substance")
 plt.xlabel("Substance")
 plt.ylabel("Percentage Change")
@@ -180,8 +208,13 @@ plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 plt.show()
 
+
+# Compare hospitalization percentage change by substance
 plt.figure(figsize=(10, 6))
-plt.bar(substance_summary["Substance"], substance_summary["Hosp_Percentage_Change"])
+plt.bar(
+    substance_summary["Substance"],
+    substance_summary["Hosp_Percentage_Change"]
+)
 plt.title("Percentage Change in Hospitalizations by Substance")
 plt.xlabel("Substance")
 plt.ylabel("Percentage Change")
@@ -191,10 +224,13 @@ plt.show()
 
 
 # ================================
-# SECTION 5: HEALTHCARE BURDEN ANALYSIS
+# SECTION 6: HEALTHCARE BURDEN ANALYSIS
 # ================================
 
 # Calculate hospitalization-to-ED ratio for each substance
+# This helps identify whether substance-related cases became
+# more hospital-intensive during the pandemic.
+
 substance_summary["Hosp_to_ED_Ratio_2019"] = (
     substance_summary["Hosp_2019"] / substance_summary["ED_2019"]
 )
@@ -220,8 +256,13 @@ print(
     ]
 )
 
+
+# Visualize change in hospitalization-to-ED ratio
 plt.figure(figsize=(10, 6))
-plt.bar(substance_summary["Substance"], substance_summary["Ratio_Change"])
+plt.bar(
+    substance_summary["Substance"],
+    substance_summary["Ratio_Change"]
+)
 plt.title("Change in Hospitalization-to-ED Ratio by Substance")
 plt.xlabel("Substance")
 plt.ylabel("Ratio Change")
@@ -231,16 +272,10 @@ plt.show()
 
 
 # ================================
-# SECTION 6: OPIOID TREND ANALYSIS
+# SECTION 7: OPIOID TREND ANALYSIS
 # ================================
 
-print("\nED Opioid Table Preview:")
-print(ed_opioids.head())
-
-print("\nHospitalization Opioid Table Preview:")
-print(hosp_opioids.head())
-
-# Rename opioid columns for readability
+# Rename opioid tables for readability
 ed_opioids.columns = [
     "Month",
     "ED_Opioid_Poisoning_2019",
@@ -265,6 +300,7 @@ hosp_opioids.columns = [
 ed_opioids = ed_opioids.dropna(subset=["Month"])
 hosp_opioids = hosp_opioids.dropna(subset=["Month"])
 
+
 # Plot ED opioid poisoning percentage change
 plt.figure(figsize=(10, 6))
 plt.plot(
@@ -278,6 +314,7 @@ plt.ylabel("Percentage Change")
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
+
 
 # Plot hospitalization opioid poisoning percentage change
 plt.figure(figsize=(10, 6))
@@ -295,7 +332,7 @@ plt.show()
 
 
 # ================================
-# SECTION 7: SPIKE DETECTION
+# SECTION 8: SPIKE DETECTION
 # ================================
 
 # Identify months with the highest opioid poisoning growth
@@ -315,34 +352,21 @@ print(highest_hosp_opioid_spike)
 
 
 # ================================
-# SECTION 8: KPI SUMMARY
+# SECTION 9: ANALYTICAL SUMMARY FOR DASHBOARD DESIGN
 # ================================
 
-# Create high-level KPI summary for Power BI/dashboard storytelling
-kpi_summary = pd.DataFrame({
-    "KPI": [
-        "Total ED Visits - All Substances 2019",
-        "Total ED Visits - All Substances 2020",
-        "Total Hospitalizations - All Substances 2019",
-        "Total Hospitalizations - All Substances 2020",
+# This summary supports dashboard planning and validation.
+# Final interactive KPI cards and measures should be created in
+# Power BI using DAX.
+
+dashboard_summary = pd.DataFrame({
+    "Metric": [
         "Highest ED Growth Substance",
         "Highest Hospitalization Growth Substance",
         "Highest ED Opioid Poisoning Spike Month",
         "Highest Hospitalization Opioid Poisoning Spike Month"
     ],
     "Value": [
-        substance_summary.loc[
-            substance_summary["Substance"] == "All substances", "ED_2019"
-        ].values[0],
-        substance_summary.loc[
-            substance_summary["Substance"] == "All substances", "ED_2020"
-        ].values[0],
-        substance_summary.loc[
-            substance_summary["Substance"] == "All substances", "Hosp_2019"
-        ].values[0],
-        substance_summary.loc[
-            substance_summary["Substance"] == "All substances", "Hosp_2020"
-        ].values[0],
         ed_growth_rank.iloc[0]["Substance"],
         hosp_growth_rank.iloc[0]["Substance"],
         highest_ed_opioid_spike["Month"],
@@ -350,18 +374,36 @@ kpi_summary = pd.DataFrame({
     ]
 })
 
-print("\nKPI Summary:")
-print(kpi_summary)
+print("\nAnalytical Summary for Dashboard Design:")
+print(dashboard_summary)
 
 
 # ================================
-# SECTION 9: EXPORT OUTPUTS
+# SECTION 10: EXPORT OUTPUTS
 # ================================
 
-# Export analysis-ready files for Power BI if needed
-substance_summary.to_csv("../data/processed/substance_summary.csv", index=False)
-ed_opioids.to_csv("../data/processed/ed_opioid_trends.csv", index=False)
-hosp_opioids.to_csv("../data/processed/hospitalization_opioid_trends.csv", index=False)
-kpi_summary.to_csv("../data/processed/kpi_summary.csv", index=False)
+# Export analysis-ready files for Power BI if needed.
+# These files support dashboard development but do not replace
+# DAX measures in Power BI.
+
+substance_summary.to_csv(
+    "../data/processed/substance_summary.csv",
+    index=False
+)
+
+ed_opioids.to_csv(
+    "../data/processed/ed_opioid_trends.csv",
+    index=False
+)
+
+hosp_opioids.to_csv(
+    "../data/processed/hospitalization_opioid_trends.csv",
+    index=False
+)
+
+dashboard_summary.to_csv(
+    "../data/processed/dashboard_summary.csv",
+    index=False
+)
 
 print("\nExport completed successfully.")
