@@ -1,1 +1,169 @@
+# 📊 Healthcare Substance Use & Opioid Harm Analytics During COVID-19
 
+## 🔍 Overview  
+This project analyzes the impact of the COVID-19 pandemic on substance-related harms across Canada using healthcare data published by the Canadian Institute for Health Information (CIHI).
+
+The analysis focuses on trends in:
+- Emergency Department (ED) visits  
+- Hospitalizations  
+- Opioid poisonings  
+- Alcohol-related harms  
+- Substance-related deaths  
+- Demographic and income-based disparities  
+
+Using Python and Power BI, this project transforms public healthcare reporting data into an interactive analytics solution designed to support healthcare monitoring, public health reporting, and decision-making.
+
+The project is inspired by CIHI’s report *Unintended Consequences of COVID-19: Impact on Harms Caused by Substance Use*.
+
+---
+
+# 🎯 Business Problem  
+During the COVID-19 pandemic, Canada experienced rising substance-related harms alongside major disruptions to healthcare access and public health services.  
+
+Healthcare organizations and public health agencies require timely analytics to:
+- monitor substance-related healthcare burden,
+- identify high-risk populations,
+- track opioid-related harms,
+- understand healthcare utilization trends,
+- and support data-driven public health decisions.
+
+This project aims to provide an interactive healthcare analytics dashboard that helps stakeholders monitor trends in substance-related harms and identify areas requiring intervention and resource planning.
+
+---
+
+# ❓ Key Business Questions  
+- Which substance-related harms increased most during COVID-19?  
+- How did ED visits and hospitalizations change during the pandemic?  
+- Which populations experienced the highest increases in harm?  
+- How did opioid poisonings evolve over time?  
+- Did substance-related cases become more severe during the pandemic?  
+- Which demographic and income groups were most affected?  
+- How can healthcare leaders monitor emerging public health risks more effectively?  
+
+---
+
+# 📂 Dataset  
+The dataset is based on publicly available healthcare reporting data released by CIHI related to:
+- Emergency Department visits
+- Inpatient hospitalizations
+- Opioid poisonings
+- Substance-related deaths
+- Demographic and income-level trends
+- Healthcare severity levels during COVID-19
+
+The analysis compares trends between:
+- March–September 2019
+- March–September 2020
+
+---
+
+# 🛠️ Tools & Technologies  
+
+| Tool | Purpose |
+|---|---|
+| Python | Exploratory Data Analysis (EDA), trend analysis, KPI calculations |
+| Pandas & NumPy | Data manipulation and analysis |
+| Matplotlib | Data visualization and trend exploration |
+| Power BI | Interactive dashboard development and KPI reporting |
+| DAX | KPI measures and analytical calculations |
+
+---
+
+# 📈 Dashboard Pages  
+
+## 1️⃣ Executive Summary
+High-level overview of:
+- Total ED Visits
+- Total Hospitalizations
+- Opioid-Related Harm Trends
+- Substance-Related Deaths
+- Year-over-Year Changes
+- Public Health KPIs
+
+### Intended Audience
+- Healthcare Executives  
+- Public Health Leaders  
+- Policy Analysts  
+
+---
+
+## 2️⃣ Substance Trend Analysis
+Compares trends across:
+- Alcohol
+- Opioids
+- Cannabis
+- Stimulants
+
+Includes:
+- Monthly trend analysis
+- Growth comparisons
+- ED vs hospitalization trends
+- Severity comparisons
+
+### Intended Audience
+- Public Health Teams  
+- Healthcare Researchers  
+- Clinical Stakeholders  
+
+---
+
+## 3️⃣ Equity & Demographic Analysis
+Focuses on:
+- Gender disparities
+- Income-level impact
+- Age-group trends
+- Vulnerable population analysis
+
+### Intended Audience
+- Health Equity Teams  
+- Government Stakeholders  
+- Community Health Organizations  
+
+---
+
+## 4️⃣ Opioid Crisis Monitoring
+Dedicated opioid-focused dashboard analyzing:
+- Opioid poisonings
+- Severe ED cases
+- Hospital admissions
+- Mortality trends
+- High-risk periods during COVID-19
+
+### Intended Audience
+- Harm Reduction Teams  
+- Emergency Care Stakeholders  
+- Addiction & Mental Health Services  
+
+---
+
+# 📊 Key Insights  
+- Substance-related hospitalizations increased during the pandemic despite overall reductions in healthcare utilization.  
+- Opioid poisonings showed significant increases during later pandemic months.  
+- Lower-income populations experienced disproportionately higher hospitalization growth.  
+- Severe substance-related healthcare cases increased during COVID-19.  
+- Substance-related deaths increased in both ED and inpatient settings.  
+
+---
+
+# 📁 Project Structure  
+
+```plaintext
+healthcare-substance-use-analytics/
+│
+├── data/
+│   └── raw/
+│
+├── python/
+│   ├── 01_data_exploration.ipynb
+│   ├── 02_trend_analysis.ipynb
+│   ├── 03_kpi_analysis.ipynb
+│
+├── powerbi/
+│   ├── healthcare_substance_use_dashboard.pbix
+│
+├── dashboard_images/
+│
+├── reports/
+│   ├── CIHI_reference_report.pdf
+│
+└── README.md
