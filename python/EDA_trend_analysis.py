@@ -167,7 +167,7 @@ print(hosp_growth_rank[["Substance", "Hosp_2019", "Hosp_2020", "Hosp_Percentage_
 
 
 # ================================
-# SECTION 7: ED VISITS VS HOSPITALIZATIONS
+# SECTION 4: ED VISITS VS HOSPITALIZATIONS
 # ================================
 
 # Compare ED and hospitalization percentage change by substance
@@ -191,7 +191,7 @@ plt.show()
 
 
 # ================================
-# SECTION 8: HEALTHCARE BURDEN ANALYSIS
+# SECTION 5: HEALTHCARE BURDEN ANALYSIS
 # ================================
 
 # Calculate hospitalization-to-ED ratio for each substance
@@ -231,7 +231,7 @@ plt.show()
 
 
 # ================================
-# SECTION 9: OPIOID TREND ANALYSIS
+# SECTION 6: OPIOID TREND ANALYSIS
 # ================================
 
 print("\nED Opioid Table Preview:")
@@ -295,7 +295,7 @@ plt.show()
 
 
 # ================================
-# SECTION 10: SPIKE DETECTION
+# SECTION 7: SPIKE DETECTION
 # ================================
 
 # Identify months with the highest opioid poisoning growth
@@ -315,7 +315,7 @@ print(highest_hosp_opioid_spike)
 
 
 # ================================
-# SECTION 11: KPI SUMMARY
+# SECTION 8: KPI SUMMARY
 # ================================
 
 # Create high-level KPI summary for Power BI/dashboard storytelling
@@ -355,7 +355,7 @@ print(kpi_summary)
 
 
 # ================================
-# SECTION 12: EXPORT OUTPUTS
+# SECTION 9: EXPORT OUTPUTS
 # ================================
 
 # Export analysis-ready files for Power BI if needed
