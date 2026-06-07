@@ -69,16 +69,17 @@ The analysis compares trends between:
 
 ---
 
-# 📈 Dashboard Pages  
+# 📊 Dashboard Features
 
-## 1️⃣ Executive Summary
-High-level overview of:
-- Total ED Visits
-- Total Hospitalizations
-- Opioid-Related Harm Trends
-- Substance-Related Deaths
-- Year-over-Year Changes
-- Public Health KPIs
+The Power BI dashboard includes:
+
+- KPI cards for ED visits, hospitalizations, opioid-related deaths, and substance-related deaths
+- Monthly trend analysis (2019 vs 2020)
+- Substance-level comparisons across ED visits and hospitalizations
+- Age-based analysis of substance-related harms
+- Income quintile analysis
+- Mortality and severity indicators
+- Interactive filtering by substance type
 
 ### Intended Audience
 - Healthcare Executives  
@@ -87,83 +88,32 @@ High-level overview of:
 
 ---
 
-## 2️⃣ Substance Trend Analysis
-Compares trends across:
-- Alcohol
-- Opioids
-- Cannabis
-- Stimulants
+# 📊 Key Insights
 
-Includes:
-- Monthly trend analysis
-- Growth comparisons
-- ED vs hospitalization trends
-- Severity comparisons
-
-### Intended Audience
-- Public Health Teams  
-- Healthcare Researchers  
-- Clinical Stakeholders  
+- Substance-related ED visits decreased by 5% between March–September 2020 compared with the same period in 2019.
+- Substance-related hospitalizations increased by 5% despite reductions in overall healthcare utilization.
+- Substance-related deaths increased by 12%.
+- Opioid-related deaths increased by 23%.
+- Alcohol remained the most reported substance across ED visits and hospitalizations.
+- Lower-income populations experienced a disproportionate burden of substance-related harms.
+- Young adults (20–39) accounted for a large share of substance-related healthcare utilization. 
 
 ---
 
-## 3️⃣ Equity & Demographic Analysis
-Focuses on:
-- Gender disparities
-- Income-level impact
-- Age-group trends
-- Vulnerable population analysis
+# 📊 Dashboard Preview
 
-### Intended Audience
-- Health Equity Teams  
-- Government Stakeholders  
-- Community Health Organizations  
-
----
-
-## 4️⃣ Opioid Crisis Monitoring
-Dedicated opioid-focused dashboard analyzing:
-- Opioid poisonings
-- Severe ED cases
-- Hospital admissions
-- Mortality trends
-- High-risk periods during COVID-19
-
-### Intended Audience
-- Harm Reduction Teams  
-- Emergency Care Stakeholders  
-- Addiction & Mental Health Services  
-
----
-
-# 📊 Key Insights  
-- Substance-related hospitalizations increased during the pandemic despite overall reductions in healthcare utilization.  
-- Opioid poisonings showed significant increases during later pandemic months.  
-- Lower-income populations experienced disproportionately higher hospitalization growth.  
-- Severe substance-related healthcare cases increased during COVID-19.  
-- Substance-related deaths increased in both ED and inpatient settings.  
+![Power BI Dashboard](dashboard_images/powerbi_dashboard.png)
 
 ---
 
 # 📁 Project Structure  
 
-```plaintext
 healthcare-substance-use-analytics/
 │
-├── data/
-│   └── raw/
-│
 ├── python/
-│   ├── 01_data_exploration.ipynb
-│   ├── 02_trend_analysis.ipynb
-│   ├── 03_kpi_analysis.ipynb
+│   ├── EDA_trend_analysis.py
 │
 ├── powerbi/
-│   ├── healthcare_substance_use_dashboard.pbix
-│
-├── dashboard_images/
-│
-├── reports/
-│   ├── CIHI_reference_report.pdf
+│   ├── dashboard-overview.png
 │
 └── README.md
