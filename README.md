@@ -30,7 +30,6 @@ This dashboard turns CIHI's static report tables into an interactive tool for ex
 ---
 
 ## Dashboard
-*(Add Power BI screenshot or published link here)*
 
 The dashboard is organized around three questions:
 1. **What changed overall?** — ED visits vs. hospitalizations, all substances, monthly trend
