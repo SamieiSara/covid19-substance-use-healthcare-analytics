@@ -46,7 +46,7 @@ def clean_percentage_column(df, col_index):
 # ================================
 
 # File path for the CIHI Excel data table
-file_path = "edited-unintended-consequences-covid-19-substance-use-data-table-en.xlsx"
+file_path = "cihi-substance-use-data-restructured.xlsx"
 
 # Open the Excel workbook
 excel_file = pd.ExcelFile(file_path)
