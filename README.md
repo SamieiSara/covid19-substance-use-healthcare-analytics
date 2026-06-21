@@ -37,8 +37,12 @@ opioid harm-reduction resources should scale seasonally rather than stay static,
 
 The dashboard is organized around three questions:
 1. **What changed overall?** — ED visits vs. hospitalizations, all substances, monthly trend
+   ![Overview page](screenshots/page1_overview.png)
 2. **Which substances drove the change?** — opioids, alcohol, cannabis, stimulants
+   ![Substance breakdown page](screenshots/page2_substances.png)
+
 3. **Who was most affected?** — age group, sex, income quintile, province
+![Demographics page](screenshots/page3_demographics.png)
 
 ---
 
@@ -49,11 +53,13 @@ The dashboard is organized around three questions:
 **Pipeline:** Raw CIHI Excel → Python cleaning & validation → CSV exports → Power BI dashboard
 
 ---
-
 ## How to Run
-1. Download the CIHI data table: `unintended-consequences-covid-19-substance-use-data-table-en.xlsx`
-2. Run `eda_review.py` to generate cleaned tables and exploratory charts
-3. Open `dashboard.pbix` in Power BI Desktop to explore the interactive report
+Dashboard screenshots are shown above — no software needed to view the results.
+
+To explore the interactive version yourself:
+1. Download the CIHI data table (included in `/data`): `unintended-consequences-covid-19-substance-use-data-table-en.xlsx`
+2. Run `EDA_trend_analysis.py` — this validates the data, generates exploratory charts, and exports 5 cleaned CSVs to `data/cleaned/`
+3. Open `Substance_Use_Dashboard.pbix` in Power BI Desktop (free download) — it imports directly from `data/cleaned/`
 
 ---
 
