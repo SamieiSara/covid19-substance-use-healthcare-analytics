@@ -133,6 +133,16 @@ plt.show()
 # SECTION 5: MONTHLY ED TRENDS
 # ================================
 
+# load the data first
+monthly_ed = pd.read_excel(
+    file_path,
+    sheet_name="2 ED volume by month ",
+    header=None,
+    skiprows=5
+)
+
+monthly_ed = monthly_ed.iloc[:7]
+
 monthly_ed = pd.read_excel(
     file_path,
     sheet_name="2 ED volume by month ",
@@ -229,30 +239,26 @@ ed_characteristics = pd.read_excel(
     file_path,
     sheet_name="4 ED characteristics",
     header=None,
-    skiprows=8
+    skiprows=7
 )
 
-# Keep age-group rows only
 age_analysis = ed_characteristics.iloc[:8]
 
-# Create clean age comparison table
+# column positions: 0=Age Group, 3=% change
 age_trends = pd.DataFrame({
     "Age_Group": age_analysis.iloc[:,0].astype(str),
-
-    "Percentage_Change": pd.to_numeric(
-        age_analysis.iloc[:,3],
-        errors="coerce"
-    ) * 100
+    "Percentage_Change": clean_percentage_column(age_analysis, 3)
 })
 
-# Remove invalid rows
 age_trends = age_trends.dropna()
 
-# Sort age groups
-age_trends = age_trends.sort_values(
-    by="Percentage_Change",
-    ascending=True
-)
+# sort chronologically by age (not by value) — fixes the Page 3 dashboard bug
+age_order = ["10–19", "20–29", "30–39", "40–49", "50–59", "60–69", "70–79", "80+"]
+age_trends["Age_Group"] = pd.Categorical(age_trends["Age_Group"], categories=age_order, ordered=True)
+age_trends = age_trends.sort_values(by="Age_Group")
+
+# save cleaned table → feeds Power BI Page 3 (age breakdown)
+export_table(age_trends, "ed_visits_by_age_group.csv")
 
 # Create conditional colors
 colors = [
@@ -296,23 +302,23 @@ hosp_substances = pd.read_excel(
     ]
 )
 
-# Keep actual substance rows only
 hosp_substances = hosp_substances.iloc[:8]
 
-# Convert percentage change to percentage points
+# this sheet already has named columns, so we clean Percentage_Change directly
 hosp_substances["Percentage_Change"] = pd.to_numeric(
     hosp_substances["Percentage_Change"],
     errors="coerce"
 ) * 100
 
-# Remove invalid rows
 hosp_substances = hosp_substances.dropna()
 
-# Sort substances by percentage change
 hosp_rank = hosp_substances.sort_values(
     by="Percentage_Change",
     ascending=True
 )
+
+# save cleaned table → feeds Power BI Page 2 (hospitalization by substance)
+export_table(hosp_rank, "hosp_by_substance.csv")
 
 # Plot hospitalization percentage changes
 plt.figure(figsize=(10,6))
