@@ -28,7 +28,7 @@ This dashboard turns CIHI's static report tables into an interactive tool for ex
 - **Men accounted for 64% of substance-related hospitalizations** and saw an 8% increase overall, vs. 1% for women — opioid hospitalizations rose 17% for men and fell 5% for women.
 - **Substance-related deaths rose in both care settings** — 12% in EDs and 13% in inpatient care — with opioid poisoning responsible for over two-thirds of these deaths.
 
-**What this means:** opioid harm-reduction resources should scale seasonally rather than stay static, with capacity peaking around September to match the observed surge. Outreach and hospitalization support should also be prioritized in lower-income neighbourhoods, where increases in alcohol and opioid harm consistently outpaced the national average.
+- **What this means:** opioid harm-reduction resources should scale seasonally rather than stay static, with capacity peaking around September to match the observed surge. Outreach and hospitalization support should also be prioritized in lower-income neighbourhoods, where increases in alcohol and opioid harm consistently outpaced the national average.
 ---
 
 ## Dashboard
