@@ -43,8 +43,10 @@ The dashboard is organized around three questions:
 ---
 
 ## Tools & Methods
-- **Python (pandas, matplotlib):** loading CIHI's Excel tables, data quality checks (missing values, duplicates, invalid negatives), reshaping wide tables into analysis-ready long format
-- **Power BI / DAX:** interactive KPI cards, filters by substance/year/province, drill-through by demographic
+- **Python (pandas, matplotlib):** loads CIHI's raw Excel tables, runs data quality checks (missing values, duplicates, invalid negatives), cleans and reshapes each table, then exports analysis-ready CSVs to `data/cleaned/`
+- **Power BI / DAX:** imports the cleaned CSVs, builds KPI cards, trend visuals, and demographic drill-throughs
+
+**Pipeline:** Raw CIHI Excel → Python cleaning & validation → CSV exports → Power BI dashboard
 
 ---
 
