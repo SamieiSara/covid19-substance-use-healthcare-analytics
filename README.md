@@ -60,9 +60,4 @@ The dashboard is organized around three questions:
 - **Quebec is excluded from hospitalization data**; ED data covers ~80% of the Canadian population
 - ED visit counts likely underestimate true substance-related harm — many cases (especially fatal ones) never reach a hospital
 
----
 
-## Key Business Questions Answered
-- Which substance-related harms increased most during COVID-19?
-- How did ED visits and hospitalizations diverge during the pandemic?
-- Which demographic groups bore the greatest increase in harm?
