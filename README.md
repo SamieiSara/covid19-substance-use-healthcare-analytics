@@ -7,7 +7,7 @@ The project combines Python (data cleaning and exploratory analysis) with Power 
 
 **Source data:** [CIHI data table](data/cihi-substance-use-data-restructured.xlsx) — from CIHI's *Unintended Consequences of COVID-19: Impact on Harms Caused by Substance Use* (2021)
 
-*Note: CIHI's original file was a single print-ready report layout. I restructured it into separate sheets by table for easier programmatic access — no data values were changed.*
+*Note: **CIHI's original file was a single print-ready report layout. I restructured it into separate sheets by table for easier programmatic access — no data values were changed.***
 ---
 
 ## Business Problem
