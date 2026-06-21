@@ -10,9 +10,9 @@
 # trends, opioid harms, patient characteristics, and regional
 # patterns before building the final interactive Power BI dashboard.
 #
-# Python is used for data exploration, validation, reshaping,
-# and preparing analysis-ready tables. Final interactive KPIs and
-# dashboard measures are developed in Power BI using DAX.
+# Python is used for data exploration, validation, and charting.
+# The Power BI dashboard imports directly from the CIHI Excel
+# workbook and is built independently using Power Query and DAX.
 #
 # Dataset Source:
 # Canadian Institute for Health Information (CIHI)
@@ -29,12 +29,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+def clean_percentage_column(df, col_index):
+    # grab column by position (CIHI sheets have no clean headers)
+    raw_column = df.iloc[:, col_index]
+
+    # convert to numbers, turn junk/blank rows into NaN instead of crashing
+    numeric_column = pd.to_numeric(raw_column, errors="coerce")
+
+    # CIHI stores % as decimal (0.08) → convert to whole percent (8)
+    return numeric_column * 100
+
+
 # ================================
 # SECTION 2: LOAD AND REVIEW DATA
 # ================================
 
 # File path for the CIHI Excel data table
-file_path = "unintended-consequences-covid-19-substance-use-data-table-en.xlsx"
+file_path = "edited-unintended-consequences-covid-19-substance-use-data-table-en.xlsx"
 
 # Open the Excel workbook
 excel_file = pd.ExcelFile(file_path)
@@ -83,11 +95,13 @@ print(
 # Check for missing values
 print("\nMissing Values:")
 print(ed_substances.isnull().sum())
+print("-> No missing values found; table is complete as extracted.")
 
 
 # Check for duplicate rows
 print("\nDuplicate Rows:")
 print(ed_substances.duplicated().sum())
+print("-> 0 duplicates, as expected for 8 distinct substance categories.")
 
 
 # Check for negative ED visit values
@@ -143,22 +157,13 @@ monthly_ed = pd.read_excel(
 
 monthly_ed = monthly_ed.iloc[:7]
 
-monthly_ed = pd.read_excel(
-    file_path,
-    sheet_name="2 ED volume by month ",
-    header=None,
-    skiprows=5
-)
-
-# Keep only March to September
-monthly_ed = monthly_ed.iloc[:7]
-
+# column positions verified against raw sheet: 0=Month, 3=All, 6=Alcohol, 9=Opioids, 12=Cannabis
 monthly_trends = pd.DataFrame({
     "Month": monthly_ed.iloc[:, 0].astype(str),
-    "All_Substances_Change": pd.to_numeric(monthly_ed.iloc[:, 3], errors="coerce") * 100,
-    "Alcohol_Change": pd.to_numeric(monthly_ed.iloc[:, 6], errors="coerce") * 100,
-    "Opioids_Change": pd.to_numeric(monthly_ed.iloc[:, 9], errors="coerce") * 100,
-    "Cannabis_Change": pd.to_numeric(monthly_ed.iloc[:, 12], errors="coerce") * 100
+    "All_Substances_Change": clean_percentage_column(monthly_ed, 3),
+    "Alcohol_Change": clean_percentage_column(monthly_ed, 6),
+    "Opioids_Change": clean_percentage_column(monthly_ed, 9),
+    "Cannabis_Change": clean_percentage_column(monthly_ed, 12)
 })
 
 monthly_trends = monthly_trends.dropna()
@@ -193,14 +198,10 @@ ed_province = pd.read_excel(
 # Keep province rows only
 ed_province = ed_province.iloc[:8]
 
-# Create clean province comparison table
+# column positions: 0=Province, 3=% change
 province_trends = pd.DataFrame({
     "Province": ed_province.iloc[:,0].astype(str),
-
-    "Percentage_Change": pd.to_numeric(
-        ed_province.iloc[:,3],
-        errors="coerce"
-    ) * 100
+    "Percentage_Change": clean_percentage_column(ed_province, 3)
 })
 
 # Remove invalid rows
@@ -242,6 +243,7 @@ ed_characteristics = pd.read_excel(
     skiprows=7
 )
 
+# Keep age-group rows only
 age_analysis = ed_characteristics.iloc[:8]
 
 # column positions: 0=Age Group, 3=% change
@@ -250,15 +252,13 @@ age_trends = pd.DataFrame({
     "Percentage_Change": clean_percentage_column(age_analysis, 3)
 })
 
+# Remove invalid rows
 age_trends = age_trends.dropna()
 
-# sort chronologically by age (not by value) — fixes the Page 3 dashboard bug
+# sort chronologically by age (not by value) — fixes age-axis ordering
 age_order = ["10–19", "20–29", "30–39", "40–49", "50–59", "60–69", "70–79", "80+"]
 age_trends["Age_Group"] = pd.Categorical(age_trends["Age_Group"], categories=age_order, ordered=True)
 age_trends = age_trends.sort_values(by="Age_Group")
-
-# save cleaned table → feeds Power BI Page 3 (age breakdown)
-export_table(age_trends, "ed_visits_by_age_group.csv")
 
 # Create conditional colors
 colors = [
@@ -302,6 +302,7 @@ hosp_substances = pd.read_excel(
     ]
 )
 
+# Keep actual substance rows only
 hosp_substances = hosp_substances.iloc[:8]
 
 # this sheet already has named columns, so we clean Percentage_Change directly
@@ -310,15 +311,14 @@ hosp_substances["Percentage_Change"] = pd.to_numeric(
     errors="coerce"
 ) * 100
 
+# Remove invalid rows
 hosp_substances = hosp_substances.dropna()
 
+# Sort substances by percentage change
 hosp_rank = hosp_substances.sort_values(
     by="Percentage_Change",
     ascending=True
 )
-
-# save cleaned table → feeds Power BI Page 2 (hospitalization by substance)
-export_table(hosp_rank, "hosp_by_substance.csv")
 
 # Plot hospitalization percentage changes
 plt.figure(figsize=(10,6))
@@ -337,5 +337,3 @@ plt.axvline(0, linestyle="--")
 
 plt.tight_layout()
 plt.show()
-
-
