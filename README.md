@@ -47,19 +47,17 @@ The dashboard is organized around three questions:
 ---
 
 ## Tools & Methods
-- **Python (pandas, matplotlib):** loads CIHI's raw Excel tables, runs data quality checks (missing values, duplicates, invalid negatives), cleans and reshapes each table, then exports analysis-ready CSVs to `data/cleaned/`
-- **Power BI / DAX:** imports the cleaned CSVs, builds KPI cards, trend visuals, and demographic drill-throughs
-
-**Pipeline:** Raw CIHI Excel → Python cleaning & validation → CSV exports → Power BI dashboard
-
+- **Python (pandas, matplotlib):** used for exploratory analysis on the CIHI data, data quality checks (missing values, duplicates, invalid negatives) and exploratory charts to understand trends before dashboard design
+- **Power BI / DAX:** primary analysis tool — imports the edited CIHI Excel workbook directly, builds KPI cards, trend visuals, and demographic drill-throughs
+  
 ---
+
 ## How to Run
 Dashboard screenshots are shown above — no software needed to view the results.
 
-To explore the interactive version yourself:
-1. Download the CIHI data table (included in `/data`): `unintended-consequences-covid-19-substance-use-data-table-en.xlsx`
-2. Run `EDA_trend_analysis.py` — this validates the data, generates exploratory charts, and exports 5 cleaned CSVs to `data/cleaned/`
-3. Open `Substance_Use_Dashboard.pbix` in Power BI Desktop (free download) — it imports directly from `data/cleaned/`
+To explore the project yourself:
+1. `EDA_trend_analysis.py` — exploratory analysis script (data quality checks + charts) run against the CIHI data table
+2. `Substance_Use_Dashboard.pbix` — open in Power BI Desktop (free download) to explore the interactive dashboard
 
 ---
 
