@@ -39,15 +39,15 @@ opioid harm-reduction resources should scale seasonally rather than stay static,
 ## Dashboard
 
 The dashboard is organized around three questions:
-1. **What changed overall?** — ED visits vs. hospitalizations, all substances, monthly trend
+1. **What changed overall?** ED visits vs. hospitalizations, all substances, monthly trend
    
    <img width="855" height="513" alt="Screenshot 2026-06-29 at 3 08 35 PM" src="https://github.com/user-attachments/assets/232ddb75-223e-4a25-b082-2e15a813c45f" />
 
-2. **Which substances drove the change?** — opioids, alcohol, cannabis, stimulants
+2. **Which substances drove the change?**  opioids, alcohol, cannabis, stimulants
    
 <img width="866" height="545" alt="Screenshot 2026-06-29 at 3 08 45 PM" src="https://github.com/user-attachments/assets/6ff1ab8e-d817-4587-a7a9-014c5a3d1c78" />
 
-3. **Who was most affected?** — age group, sex, income quintile, province
+3. **Who was most affected?**  age group, sex, income quintile, province
 
 <img width="775" height="541" alt="Screenshot 2026-06-29 at 3 08 54 PM" src="https://github.com/user-attachments/assets/8e6e03e9-6568-4b96-8d6d-185944f26d88" />
 
