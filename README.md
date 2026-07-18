@@ -8,7 +8,7 @@ The project combines Python (data cleaning and exploratory analysis) with Power 
 **Source data:** [CIHI data table](data/cihi-substance-use-data-restructured.xlsx) — from CIHI's *Unintended Consequences of COVID-19: Impact on Harms Caused by Substance Use* (2021)
 
 **Note:** 
-CIHI's original file was a single print-ready report layout. I restructured it into separate sheets by table for easier programmatic access, no data values were changed.
+CIHI's original file was a single print-ready report layout. I restructured it into separate sheets by table for easier programmatic access. No data values were changed.
 
 ---
 
@@ -24,16 +24,16 @@ This dashboard turns CIHI's static report tables into an interactive tool for ex
 
 ## Key Findings
 - **Overall ED visits for substance-related harm fell 5%** (186,529 → 176,902), while **hospitalizations rose 5%** (76,948 → 80,954). This is the opposite of trends for "any reason" visits, which dropped much more sharply.
-- **Opioid-related ED visits rose 8% overall** but spiked to **+55% in September 2020** vs. September 2019. opioid poisonings alone rose 16%, peaking at +88% in September.
+- **Opioid-related ED visits rose 8% overall** but spiked to **+55% in September 2020** vs. September 2019. Opioid poisonings alone rose 16%, peaking at +88% in September.
 - **Alcohol ED visits fell 11%**, but **alcohol-related hospitalizations rose 5%**, suggesting patients presented later and with more severe conditions.
 - **Stimulant-related ED visits peaked early** (+29% in May 2020) while opioid visits surged later in the year, a possible substitution effect as drug supply was disrupted.
 - **Lowest-income neighbourhoods saw the steepest increases** in alcohol (+14%) and opioid (+11%) hospitalizations, while the highest-income group saw almost no change.
 - **Men accounted for 64% of substance-related hospitalizations** and saw an 8% increase overall, vs. 1% for women. Opioid hospitalizations rose 17% for men and fell 5% for women.
-- **Substance-related deaths rose in both care settings**: 12% in EDs and 13% in inpatient care , with opioid poisoning responsible for over two-thirds of these deaths.
+- **Substance-related deaths rose in both care settings**: 12% in EDs and 13% in inpatient care. Opioid deaths alone rose 23% in EDs and 18% in inpatient settings, and over two-thirds of these opioid deaths were attributed to poisoning.
 
  **What this means:** 
-opioid harm-reduction resources should scale seasonally rather than stay static, with capacity peaking around September to match the observed surge. Outreach and hospitalization support should also be prioritized in lower-income neighbourhoods, where increases in alcohol and opioid harm consistently outpaced the national average.
-****
+Opioid harm-reduction resources should scale seasonally rather than stay static, with capacity peaking around September to match the observed surge. Outreach and hospitalization support should also be prioritized in lower-income neighbourhoods, where increases in alcohol and opioid harm consistently outpaced the national average.
+
 ---
 
 ## Dashboard
@@ -72,5 +72,4 @@ To explore the project yourself:
 - Data is **provisional** (CIHI estimates ~90% complete) and may change in future updates
 - **Quebec is excluded from hospitalization data**; ED data covers ~80% of the Canadian population
 - ED visit counts likely underestimate true substance-related harm — many cases (especially fatal ones) never reach a hospital
-
-
+- 
