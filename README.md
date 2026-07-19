@@ -45,7 +45,7 @@ The dashboard is organized around three questions:
 
 2. **Which substances drove the change?**  opioids, alcohol, cannabis, stimulants
    
-<img width="866" height="545" alt="Screenshot 2026-06-29 at 3 08 45 PM" src="https://github.com/user-attachments/assets/6ff1ab8e-d817-4587-a7a9-014c5a3d1c78" />
+<img width="679" height="439" alt="Screenshot 2026-07-19 at 12 13 37 PM" src="https://github.com/user-attachments/assets/1af69f75-65de-46f4-8401-9476ed2ae7bd" />
 
 3. **Who was most affected?**  age group, sex, income quintile, province
 
