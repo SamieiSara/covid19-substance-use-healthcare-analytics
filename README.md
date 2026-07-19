@@ -59,6 +59,8 @@ The dashboard is organized around three questions:
 ## Tools & Methods
 - **Python (pandas, matplotlib):** used for exploratory analysis on the CIHI data, data quality checks (missing values, duplicates, invalid negatives) and exploratory charts to understand trends before dashboard design
 - **Power BI / DAX:** primary analysis tool — imports the edited CIHI Excel workbook directly, builds KPI cards, trend visuals, and demographic drill-throughs
+
+While building KPI cards, resolved a filter-context bug affecting hospitalization totals — see [DAX_notes.md](DAX_notes.md) for details.
   
 ---
 
