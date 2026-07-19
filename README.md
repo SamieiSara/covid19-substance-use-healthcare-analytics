@@ -94,4 +94,3 @@ To explore the project yourself:
 - Data is **provisional** (CIHI estimates ~90% complete) and may change in future updates
 - **Quebec is excluded from hospitalization data**; ED data covers ~80% of the Canadian population
 - ED visit counts likely underestimate true substance-related harm — many cases (especially fatal ones) never reach a hospital
-- 
