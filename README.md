@@ -5,7 +5,8 @@ This project analyzes the impact of COVID-19 on substance-related harms across C
 
 The project combines Python (data cleaning and exploratory analysis) with Power BI (interactive dashboard) to turn a static CIHI report into an explorable analytics tool.
 
-**Source data:** [CIHI data table](data/cihi-substance-use-data-restructured.xlsx) — from CIHI's *Unintended Consequences of COVID-19: Impact on Harms Caused by Substance Use* (2021)
+**Source data:** [Restructured CIHI data](data/cihi-substance-use-data-restructured.xlsx)
+**Raw source (unedited):** [Original CIHI data](data/cihi-raw-original.xlsx)
 
 **Note:** 
 CIHI's original file was a single print-ready report layout. I restructured it into separate sheets by table for easier programmatic access. No data values were changed.
