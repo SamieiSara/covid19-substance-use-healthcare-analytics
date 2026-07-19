@@ -49,7 +49,7 @@ The dashboard is organized around three questions:
 
 3. **Who was most affected?**  age group, sex, income quintile, province
 
-<img width="775" height="541" alt="Screenshot 2026-06-29 at 3 08 54 PM" src="https://github.com/user-attachments/assets/8e6e03e9-6568-4b96-8d6d-185944f26d88" />
+<img width="608" height="436" alt="Screenshot 2026-07-19 at 12 20 56 PM" src="https://github.com/user-attachments/assets/5b9906ae-092e-4b31-9378-c1e726a08bb1" />
 
 ---
 
