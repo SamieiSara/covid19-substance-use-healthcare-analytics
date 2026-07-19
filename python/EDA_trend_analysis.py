@@ -12,7 +12,6 @@
 #
 # Dataset Source:
 # Canadian Institute for Health Information (CIHI)
-# Report: Unintended Consequences of COVID-19:
 # Impact on Harms Caused by Substance Use
 # ============================================================
 
