@@ -59,6 +59,20 @@ The dashboard is organized around three questions:
   
 ---
 
+## Sample EDA Output
+
+Python was used to validate the data and explore trends before the dashboard was built. A few highlights:
+
+**Monthly % change in ED visits by substance** — opioid-related visits spiked sharply in September 2020, while other substances stayed closer to baseline.
+<img width="1500" height="900" alt="monthly_ed_trends" src="https://github.com/user-attachments/assets/01d6d347-7aa9-485e-912f-9da3d39eac81" />
+
+**% change in ED visits by age group** — decreases were most pronounced among younger age groups, likely reflecting reduced social activity during pandemic closures.
+[drag ed_visits_by_age.png here]
+
+Full data quality checks (missing values, duplicate rows) are included in `EDA_trend_analysis.py` and confirmed no data quality issues across the analyzed tables.
+
+---
+
 ## How to Run
 Dashboard screenshots are shown above — no software needed to view the results.
 
