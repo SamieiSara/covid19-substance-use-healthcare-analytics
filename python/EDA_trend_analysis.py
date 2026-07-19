@@ -2,17 +2,13 @@
 # EXPLORATORY DATA ANALYSIS (EDA) & TREND EXPLORATION
 # COVID-19 Substance Use & Healthcare Harm Analytics Project
 #
-# Description:
-# This script explores CIHI's public healthcare reporting data
-# related to substance-related harms during the COVID-19 pandemic.
-#
-# The goal is to analyze ED visits, hospitalizations, monthly
-# trends, opioid harms, patient characteristics, and regional
-# patterns before building the final interactive Power BI dashboard.
+# This script explores CIHI's healthcare data on substance-related
+# harm during the COVID-19 pandemic: ED visits, hospitalizations,
+# monthly trends, provincial patterns, and age-group patterns.
 #
 # Python is used for data exploration, validation, and charting.
-# The Power BI dashboard imports directly from the CIHI Excel
-# workbook and is built independently using Power Query and DAX.
+# The Power BI dashboard reads the same Excel workbook directly
+# and is built independently using Power Query and DAX.
 #
 # Dataset Source:
 # Canadian Institute for Health Information (CIHI)
@@ -20,320 +16,196 @@
 # Impact on Harms Caused by Substance Use
 # ============================================================
 
-
-# ================================
-# SECTION 1: IMPORT LIBRARIES
-# ================================
-
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 
-
-def clean_percentage_column(df, col_index):
-    # grab column by position (CIHI sheets have no clean headers)
-    raw_column = df.iloc[:, col_index]
-
-    # convert to numbers, turn junk/blank rows into NaN instead of crashing
-    numeric_column = pd.to_numeric(raw_column, errors="coerce")
-
-    # CIHI stores % as decimal (0.08) → convert to whole percent (8)
-    return numeric_column * 100
+FILE_PATH = "cihi-substance-use-data-restructured.xlsx"
+CHART_DIR = "charts"
 
 
 # ================================
-# SECTION 2: LOAD AND REVIEW DATA
+# HELPER FUNCTIONS
 # ================================
 
-# File path for the CIHI Excel data table
-file_path = "cihi-substance-use-data-restructured.xlsx"
+def check_data_quality(df, sheet_name):
+    """
+    Print a quick data quality summary for a loaded sheet:
+    missing values per column and number of duplicate rows.
+    Run automatically every time a sheet is loaded.
+    """
+    print(f"\n--- Data quality check: {sheet_name} ---")
 
-# Open the Excel workbook
-excel_file = pd.ExcelFile(file_path)
+    missing = df.isnull().sum()
+    missing = missing[missing > 0]
+    if missing.empty:
+        print("No missing values.")
+    else:
+        print("Missing values found:")
+        print(missing)
 
-# Review all available sheets in the workbook
-print("Available Sheets:")
-for sheet in excel_file.sheet_names:
-    print(sheet)
-
-# ================================
-# SECTION 3: DATA QUALITY REVIEW
-# ================================
-
-# Load Table 1
-ed_substances = pd.read_excel(
-    file_path,
-    sheet_name="1 ED type substances",
-    header=None,
-    skiprows=4,
-    names=[
-        "Substance",
-        "ED_2019",
-        "ED_2020",
-        "Percentage_Change"
-    ]
-)
-
-# Keep only actual substance rows
-ed_substances = ed_substances.iloc[:8]
+    duplicate_count = df.duplicated().sum()
+    print(f"Duplicate rows: {duplicate_count}")
 
 
-# Review data structure
-print("\nDataset Information:")
-print(ed_substances.info())
+def load_cihi_sheet(file_path, sheet_name):
+    """
+    Load a CIHI sheet, automatically skipping the leftover
+    'Screen reader users...' description row if one is present,
+    dropping any fully blank trailing rows, trimming stray
+    line breaks/extra spaces from the header row, and running
+    a data quality check before returning the data.
+    """
+    preview = pd.read_excel(file_path, sheet_name=sheet_name, header=None, nrows=1)
+    first_cell = preview.iloc[0, 0]
+    skip = 1 if isinstance(first_cell, str) and first_cell.startswith("Screen reader") else 0
+
+    df = pd.read_excel(file_path, sheet_name=sheet_name, header=skip)
+    df = df.dropna(how="all")
+    df.columns = [" ".join(str(col).replace("\n", " ").split()) for col in df.columns]
+
+    check_data_quality(df, sheet_name)
+
+    return df
 
 
-# Summary statistics for numeric columns
-print("\nSummary Statistics:")
-print(
-    ed_substances[
-        ["ED_2019", "ED_2020", "Percentage_Change"]
-    ].describe()
-)
-
-
-# Check for missing values
-print("\nMissing Values:")
-print(ed_substances.isnull().sum())
-print("-> No missing values found; table is complete as extracted.")
-
-
-# Check for duplicate rows
-print("\nDuplicate Rows:")
-print(ed_substances.duplicated().sum())
-print("-> 0 duplicates, as expected for 8 distinct substance categories.")
-
-
-# Check for negative ED visit values
-negative_values = (
-    (ed_substances["ED_2019"] < 0)
-    | (ed_substances["ED_2020"] < 0)
-)
-
-print("\nRows with Invalid Negative Values:")
-print(ed_substances[negative_values])
+def save_chart(filename):
+    """Save the current chart to the charts folder instead of popping up a window."""
+    plt.tight_layout()
+    plt.savefig(f"{CHART_DIR}/{filename}", dpi=150)
+    plt.close()
+    print(f"Saved: {CHART_DIR}/{filename}")
 
 
 # ================================
-# SECTION 4: ED VISITS BY SUBSTANCE
+# SECTION 1: ED VISITS BY SUBSTANCE
 # ================================
 
-# Sort by percentage change
-change_rank = ed_substances.sort_values(
-    by="Percentage_Change",
-    ascending=False
-)
+def chart_ed_by_substance():
+    df = load_cihi_sheet(FILE_PATH, "1 ED type substances")
+    df["Percentage change"] = df["Percentage change"] * 100
 
-plt.figure(figsize=(10,6))
+    ranked = df.sort_values("Percentage change", ascending=False)
 
-plt.bar(
-    change_rank["Substance"],
-    change_rank["Percentage_Change"]
-)
+    plt.figure(figsize=(10, 6))
+    plt.bar(ranked["Type of substance"], ranked["Percentage change"])
+    plt.title("Percentage Change in ED Visits by Substance")
+    plt.xlabel("Type of Substance")
+    plt.ylabel("Percentage Change (%)")
+    plt.xticks(rotation=45, ha="right")
+    plt.axhline(0, linestyle="--")
+    save_chart("ed_visits_by_substance.png")
 
-plt.title("Percentage Change in ED Visits by Substance")
-plt.xlabel("Type of Substance")
-plt.ylabel("Percentage Change (%)")
-
-plt.xticks(rotation=45, ha="right")
-
-# Add zero reference line
-plt.axhline(0, linestyle="--")
-
-plt.tight_layout()
-plt.show()
 
 # ================================
-# SECTION 5: MONTHLY ED TRENDS
+# SECTION 2: MONTHLY ED TRENDS
 # ================================
 
-# load the data first
-monthly_ed = pd.read_excel(
-    file_path,
-    sheet_name="2 ED volume by month ",
-    header=None,
-    skiprows=5
-)
+def chart_monthly_trends():
+    df = load_cihi_sheet(FILE_PATH, "2 ED volume by month ")
+    df = df[df["Month"] != "Total"]  # exclude the period-total row, not a real month
 
-monthly_ed = monthly_ed.iloc[:7]
+    monthly_trends = pd.DataFrame({
+        "Month": df["Month"],
+        "All Substances": df["All -% change"] * 100,
+        "Alcohol": df["Alcohol - % Change"] * 100,
+        "Opioids": df["Opioids - % change"] * 100,
+        "Cannabis": df["Cannabis - % change"] * 100,
+    })
 
-# column positions verified against raw sheet: 0=Month, 3=All, 6=Alcohol, 9=Opioids, 12=Cannabis
-monthly_trends = pd.DataFrame({
-    "Month": monthly_ed.iloc[:, 0].astype(str),
-    "All_Substances_Change": clean_percentage_column(monthly_ed, 3),
-    "Alcohol_Change": clean_percentage_column(monthly_ed, 6),
-    "Opioids_Change": clean_percentage_column(monthly_ed, 9),
-    "Cannabis_Change": clean_percentage_column(monthly_ed, 12)
-})
+    plt.figure(figsize=(10, 6))
+    for col in ["All Substances", "Alcohol", "Opioids", "Cannabis"]:
+        plt.plot(monthly_trends["Month"], monthly_trends[col], marker="o", label=col)
 
-monthly_trends = monthly_trends.dropna()
+    plt.title("Monthly Percentage Change in ED Visits During COVID-19")
+    plt.xlabel("Month")
+    plt.ylabel("Percentage Change (%)")
+    plt.axhline(0, linestyle="--")
+    plt.legend()
+    save_chart("monthly_ed_trends.png")
 
-plt.figure(figsize=(10, 6))
-
-plt.plot(monthly_trends["Month"], monthly_trends["All_Substances_Change"], marker="o", label="All Substances")
-plt.plot(monthly_trends["Month"], monthly_trends["Alcohol_Change"], marker="o", label="Alcohol")
-plt.plot(monthly_trends["Month"], monthly_trends["Opioids_Change"], marker="o", label="Opioids")
-plt.plot(monthly_trends["Month"], monthly_trends["Cannabis_Change"], marker="o", label="Cannabis")
-
-plt.title("Monthly Percentage Change in ED Visits During COVID-19")
-plt.xlabel("Month")
-plt.ylabel("Percentage Change (%)")
-plt.axhline(0, linestyle="--")
-plt.legend()
-plt.tight_layout()
-plt.show()
 
 # ================================
-# SECTION 6: PROVINCIAL ED VISIT ANALYSIS
+# SECTION 3: PROVINCIAL ED VISIT ANALYSIS
 # ================================
 
-# Load Table 3
-ed_province = pd.read_excel(
-    file_path,
-    sheet_name="3 ED volume by province",
-    header=None,
-    skiprows=5
-)
+def chart_province_trends():
+    df = load_cihi_sheet(FILE_PATH, "3 ED volume by province")
+    df = df[df["Province/territory"] != "Canada"]  # national total, not a province
 
-# Keep province rows only
-ed_province = ed_province.iloc[:8]
+    province_trends = pd.DataFrame({
+        "Province": df["Province/territory"],
+        "Percentage Change": df["All -% change"] * 100,
+    }).sort_values("Percentage Change")
 
-# column positions: 0=Province, 3=% change
-province_trends = pd.DataFrame({
-    "Province": ed_province.iloc[:,0].astype(str),
-    "Percentage_Change": clean_percentage_column(ed_province, 3)
-})
+    plt.figure(figsize=(10, 6))
+    plt.barh(province_trends["Province"], province_trends["Percentage Change"])
+    plt.title("Percentage Change in Substance-Related ED Visits by Province")
+    plt.xlabel("Percentage Change (%)")
+    plt.ylabel("Province")
+    plt.axvline(0, linestyle="--")
+    save_chart("ed_visits_by_province.png")
 
-# Remove invalid rows
-province_trends = province_trends.dropna()
-
-# Sort provinces by percentage change
-province_trends = province_trends.sort_values(
-    by="Percentage_Change",
-    ascending=True
-)
-
-# Plot provincial comparison
-plt.figure(figsize=(10,6))
-
-plt.barh(
-    province_trends["Province"],
-    province_trends["Percentage_Change"]
-)
-
-plt.title("Percentage Change in Substance-Related ED Visits by Province")
-plt.xlabel("Percentage Change (%)")
-plt.ylabel("Province")
-
-# Add reference line
-plt.axvline(0, linestyle="--")
-
-plt.tight_layout()
-plt.show()
 
 # ================================
-# SECTION 7: PATIENT AGE ANALYSIS
+# SECTION 4: PATIENT AGE ANALYSIS
 # ================================
 
-# Load Table 4
-ed_characteristics = pd.read_excel(
-    file_path,
-    sheet_name="4 ED characteristics",
-    header=None,
-    skiprows=7
-)
+def chart_age_trends():
+    df = load_cihi_sheet(FILE_PATH, "ED-Age")
 
-# Keep age-group rows only
-age_analysis = ed_characteristics.iloc[:8]
+    age_trends = pd.DataFrame({
+        "Age Group": df["Patient age"],
+        "Percentage Change": df["All -% change"] * 100,
+    })
 
-# column positions: 0=Age Group, 3=% change
-age_trends = pd.DataFrame({
-    "Age_Group": age_analysis.iloc[:,0].astype(str),
-    "Percentage_Change": clean_percentage_column(age_analysis, 3)
-})
+    age_order = ["10–19", "20–29", "30–39", "40–49", "50–59", "60–69", "70–79", "80+"]
+    age_trends["Age Group"] = pd.Categorical(age_trends["Age Group"], categories=age_order, ordered=True)
+    age_trends = age_trends.sort_values("Age Group")
 
-# Remove invalid rows
-age_trends = age_trends.dropna()
+    colors = ["red" if x < 0 else "green" for x in age_trends["Percentage Change"]]
 
-# sort chronologically by age (not by value) — fixes age-axis ordering
-age_order = ["10–19", "20–29", "30–39", "40–49", "50–59", "60–69", "70–79", "80+"]
-age_trends["Age_Group"] = pd.Categorical(age_trends["Age_Group"], categories=age_order, ordered=True)
-age_trends = age_trends.sort_values(by="Age_Group")
+    plt.figure(figsize=(10, 6))
+    plt.barh(age_trends["Age Group"], age_trends["Percentage Change"], color=colors)
+    plt.title("Percentage Change in Substance-Related ED Visits by Age Group")
+    plt.xlabel("Percentage Change (%)")
+    plt.ylabel("Age Group")
+    plt.axvline(0, linestyle="--")
+    save_chart("ed_visits_by_age.png")
 
-# Create conditional colors
-colors = [
-    "red" if x < 0 else "green"
-    for x in age_trends["Percentage_Change"]
-]
-
-# Plot age-group comparison
-plt.figure(figsize=(10,6))
-
-plt.barh(
-    age_trends["Age_Group"],
-    age_trends["Percentage_Change"],
-    color=colors
-)
-
-plt.title("Percentage Change in Substance-Related ED Visits by Age Group")
-plt.xlabel("Percentage Change (%)")
-plt.ylabel("Age Group")
-
-plt.axvline(0, linestyle="--")
-
-plt.tight_layout()
-plt.show()
 
 # ================================
-# SECTION 8: HOSPITALIZATION ANALYSIS
+# SECTION 5: HOSPITALIZATION ANALYSIS
 # ================================
 
-# Load Table 8
-hosp_substances = pd.read_excel(
-    file_path,
-    sheet_name="8 Hosp type substances",
-    header=None,
-    skiprows=4,
-    names=[
-        "Substance",
-        "Hosp_2019",
-        "Hosp_2020",
-        "Percentage_Change"
-    ]
-)
+def chart_hospitalizations_by_substance():
+    df = load_cihi_sheet(FILE_PATH, "8 Hosp type substances")
+    df["Percentage change"] = df["Percentage change"] * 100
 
-# Keep actual substance rows only
-hosp_substances = hosp_substances.iloc[:8]
+    ranked = df.sort_values("Percentage change")
 
-# this sheet already has named columns, so we clean Percentage_Change directly
-hosp_substances["Percentage_Change"] = pd.to_numeric(
-    hosp_substances["Percentage_Change"],
-    errors="coerce"
-) * 100
+    plt.figure(figsize=(10, 6))
+    plt.barh(ranked["Type of substance"], ranked["Percentage change"])
+    plt.title("Percentage Change in Substance-Related Hospitalizations")
+    plt.xlabel("Percentage Change (%)")
+    plt.ylabel("Substance")
+    plt.axvline(0, linestyle="--")
+    save_chart("hospitalizations_by_substance.png")
 
-# Remove invalid rows
-hosp_substances = hosp_substances.dropna()
 
-# Sort substances by percentage change
-hosp_rank = hosp_substances.sort_values(
-    by="Percentage_Change",
-    ascending=True
-)
+# ================================
+# MAIN
+# ================================
 
-# Plot hospitalization percentage changes
-plt.figure(figsize=(10,6))
+def main():
+    import os
+    os.makedirs(CHART_DIR, exist_ok=True)
 
-plt.barh(
-    hosp_rank["Substance"],
-    hosp_rank["Percentage_Change"]
-)
+    chart_ed_by_substance()
+    chart_monthly_trends()
+    chart_province_trends()
+    chart_age_trends()
+    chart_hospitalizations_by_substance()
 
-plt.title("Percentage Change in Substance-Related Hospitalizations")
-plt.xlabel("Percentage Change (%)")
-plt.ylabel("Substance")
 
-# Add reference line
-plt.axvline(0, linestyle="--")
-
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    main()
